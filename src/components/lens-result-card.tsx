@@ -1,0 +1,83 @@
+import type { LensMatch } from "@/lib/search-lenses";
+
+function money(value: number | null) {
+  return value === null ? "—" : `$${value.toFixed(2)}`;
+}
+
+function shortMaterial(material: string) {
+  const match = material.match(/[\d.]+/);
+  if (match) return match[0];
+  return material.slice(0, 5);
+}
+
+function range(low: number | null, high: number | null) {
+  if (low === null && high === null) return "—";
+  const a = Math.min(low ?? 0, high ?? 0);
+  const b = Math.max(low ?? 0, high ?? 0);
+  return `${a.toFixed(2)} to ${b > 0 ? "+" : ""}${b.toFixed(2)}`;
+}
+
+export function LensResultCard({ match }: { match: LensMatch }) {
+  const { lens, coating, upgrades, kind } = match;
+  const exact = kind === "exact";
+
+  const details = [
+    lens.aspheric ? "Aspheric" : "Spheric",
+    coating ? coating.name : "No AR",
+    lens.photochromic ? `Photochromic ${lens.photochromic}` : null,
+    lens.tint ? `Tint ${lens.tint}` : null,
+    lens.blueLight ? "Blue filter" : null,
+  ]
+    .filter(Boolean)
+    .join(" · ");
+
+  return (
+    <div
+      className={`glass rounded-xl border border-glass-line p-4 ${
+        exact ? "shadow-glass" : ""
+      }`}
+    >
+      <div className="flex items-start gap-4">
+        <div
+          className={`grid size-12 shrink-0 place-items-center rounded-lg font-display text-sm font-bold ${
+            exact ? "gradient-brand text-brand-foreground" : "bg-secondary text-ink-soft"
+          }`}
+        >
+          {shortMaterial(lens.material)}
+        </div>
+        <div className="min-w-0 flex-1">
+          <p className="text-[14px] font-semibold">{lens.name}</p>
+          <p className="text-[12px] text-ink-soft">{details}</p>
+          <p className="mt-1 text-[11px] text-ink-faint">
+            {lens.manufacturer} · {lens.sheet} · SPH {range(lens.powerLow, lens.powerHigh)} · Cyl
+            to {lens.cylMax ?? "—"} · Total ≥ {lens.totalPowerLowerBound ?? "—"}
+          </p>
+          {lens.components && (
+            <p className="mt-1 text-[11px] text-ink-faint">Components: {lens.components}</p>
+          )}
+          {lens.notes && <p className="mt-1 text-[11px] text-ink-soft italic">{lens.notes}</p>}
+          {upgrades.length > 0 && (
+            <div className="mt-1.5 flex flex-wrap gap-1.5">
+              {upgrades.map((upgrade) => (
+                <span
+                  key={upgrade}
+                  className="rounded bg-flag-soft px-1.5 py-0.5 text-[10px] font-medium text-flag"
+                >
+                  {upgrade}
+                </span>
+              ))}
+            </div>
+          )}
+        </div>
+        <div className="shrink-0 text-right">
+          <p className="font-display text-[16px] font-bold tabular-nums">
+            {money(lens.pairCost)}
+          </p>
+          <p className="text-[11px] font-medium text-ink-soft tabular-nums">
+            {money(lens.lensCost)} each
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+}
