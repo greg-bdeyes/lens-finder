@@ -248,21 +248,24 @@ export function LensSearchForm({ catalog, query, onChange }: Props) {
 
         <div className="grid grid-cols-2 gap-3">
           <div>
-            <Label>Sphere (optional)</Label>
+            <Label>Sphere</Label>
             <NumberField
-              placeholder="-2.25"
+              placeholder="Any"
               value={query.sphere}
               onChange={(value) => set("sphere", value)}
             />
           </div>
           <div>
-            <Label>Cyl (optional)</Label>
+            <Label>Cyl</Label>
             <NumberField
-              placeholder="-1.00"
+              placeholder="Any"
               value={query.cylinder}
               onChange={(value) => set("cylinder", value)}
             />
           </div>
+          <p className="col-span-2 -mt-1 text-[11px] text-ink-faint">
+            Leave blank to ignore. Format: -2.25, -1.00…
+          </p>
         </div>
 
         <div className="grid grid-cols-2 gap-3">

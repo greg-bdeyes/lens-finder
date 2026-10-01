@@ -126,14 +126,22 @@ export function searchLenses(catalog: Catalog, query: LensQuery): LensMatch[] {
   });
 }
 
-/** Tiers present in the AR sheet, ordered basic -> premium, optionally VSP only. */
+/** Fixed display order for tiers, basic -> premium. */
+const TIER_ORDER = ["Standard", "T1", "T2", "T3", "VSP C", "VSP D", "VSP D+UV"];
+
+function tierOrder(tier: string): number {
+  const index = TIER_ORDER.indexOf(tier);
+  return index >= 0 ? index : TIER_ORDER.length + tierRank(tier);
+}
+
+/** Tiers present in the AR sheet, in the fixed display order, optionally VSP only. */
 export function tiersFor(coatings: ArCoating[], vspOnly: boolean): string[] {
   const tiers = new Set<string>();
   for (const coating of coatings) {
     if (vspOnly && !coating.vsp) continue;
     if (coating.tier) tiers.add(coating.tier);
   }
-  return [...tiers].sort((a, b) => tierRank(a) - tierRank(b) || a.localeCompare(b));
+  return [...tiers].sort((a, b) => tierOrder(a) - tierOrder(b) || a.localeCompare(b));
 }
 
 export function coatingsInCategory(coatings: ArCoating[], category: string): ArCoating[] {
