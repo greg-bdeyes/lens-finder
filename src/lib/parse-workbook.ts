@@ -38,8 +38,9 @@ function readMaterials(wb: XLSX.WorkBook): string[] {
 
 function readCoatings(wb: XLSX.WorkBook): ArCoating[] {
   const rows = rowsOf(wb, "Anti-reflective coatings");
-  if (rows.length === 0) return [];
-  const header = rows[0].map((cell) => text(cell).toLowerCase().replace(/\?$/, ""));
+  const firstRow = rows[0];
+  if (!firstRow) return [];
+  const header = firstRow.map((cell) => text(cell).toLowerCase().replace(/\?$/, ""));
   const idx = (needle: string) => header.findIndex((cell) => cell.startsWith(needle));
   const iName = idx("anti-reflective");
   const iTier = idx("tier");
@@ -81,9 +82,10 @@ function readLensSheet(wb: XLSX.WorkBook, sheet: SheetName, materials: string[])
   const headerIndex = rows.findIndex((row) =>
     row?.some((cell) => text(cell).toLowerCase() === "manufacturer"),
   );
-  if (headerIndex < 0) return [];
+  const headerRow = headerIndex >= 0 ? rows[headerIndex] : undefined;
+  if (!headerRow) return [];
 
-  const header = rows[headerIndex].map((cell) => text(cell).toLowerCase());
+  const header = headerRow.map((cell) => text(cell).toLowerCase());
   const col = (needle: string) => header.findIndex((cell) => cell === needle);
   const colStarts = (needle: string) => header.findIndex((cell) => cell.startsWith(needle));
 
