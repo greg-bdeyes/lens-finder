@@ -6,8 +6,9 @@ import {
   useRouter,
   HeadContent,
   Scripts,
+  type ErrorComponentProps,
 } from "@tanstack/react-router";
-import { useEffect, type ReactNode } from "react";
+import { useEffect } from "react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
@@ -34,7 +35,7 @@ function NotFoundComponent() {
   );
 }
 
-function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
+function ErrorComponent({ error, reset }: ErrorComponentProps) {
   console.error(error);
   const router = useRouter();
   useEffect(() => {
@@ -99,7 +100,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
   errorComponent: ErrorComponent,
 });
 
-function RootComponent({ children }: { children: ReactNode }) {
+function RootComponent() {
   const { queryClient } = Route.useRouteContext();
 
   return (
@@ -110,7 +111,7 @@ function RootComponent({ children }: { children: ReactNode }) {
       <body>
         <QueryClientProvider client={queryClient}>
           {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
-          {children ?? <Outlet />}
+          <Outlet />
         </QueryClientProvider>
         <Scripts />
       </body>
