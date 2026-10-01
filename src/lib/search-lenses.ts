@@ -4,6 +4,7 @@ import { tierRank } from "./catalog-types";
 export const AR_NONE = "__no_ar__";
 export const AR_ANY = "__any__";
 export const AR_ANY_BLUE = "__any_blue__";
+export const AR_NO_PREFERENCE = "__no_preference__";
 
 export interface LensQuery {
   vsp: boolean;
@@ -97,7 +98,9 @@ export function searchLenses(catalog: Catalog, query: LensQuery): LensMatch[] {
     if (!query.blueFilterLens && lens.blueLight) upgrades.push("Blue filter lens included");
 
     // AR coating.
-    if (query.arCategory === AR_NONE) {
+    if (query.arCategory === AR_NO_PREFERENCE) {
+      // Ignore the AR parameter entirely.
+    } else if (query.arCategory === AR_NONE) {
       if (lens.ar) continue;
     } else {
       if (!coating) continue;

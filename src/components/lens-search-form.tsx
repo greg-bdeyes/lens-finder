@@ -4,6 +4,7 @@ import {
   AR_ANY,
   AR_ANY_BLUE,
   AR_NONE,
+  AR_NO_PREFERENCE,
   coatingsInCategory,
   tiersFor,
   type LensQuery,
@@ -76,7 +77,7 @@ export function LensSearchForm({ catalog, query, onChange }: Props) {
     [catalog, query.vsp],
   );
   const categoryCoatings = useMemo(() => {
-    if (query.arCategory === AR_NONE) return [];
+    if (query.arCategory === AR_NONE || query.arCategory === AR_NO_PREFERENCE) return [];
     return coatingsInCategory(catalog.coatings, query.arCategory);
   }, [catalog, query.arCategory]);
 
@@ -90,7 +91,8 @@ export function LensSearchForm({ catalog, query, onChange }: Props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [categoryCoatings]);
 
-  const arDisabled = query.arCategory === AR_NONE;
+  const arDisabled =
+    query.arCategory === AR_NONE || query.arCategory === AR_NO_PREFERENCE;
 
   return (
     <div className="glass shadow-glass rounded-2xl border border-glass-line p-5">
@@ -185,13 +187,18 @@ export function LensSearchForm({ catalog, query, onChange }: Props) {
               value={query.arSpecific === AR_ANY ? query.arCategory : query.arSpecific}
               onChange={(event) => {
                 const value = event.target.value;
-                if (value === AR_NONE || value === AR_ANY) {
+                if (
+                  value === AR_NONE ||
+                  value === AR_ANY ||
+                  value === AR_NO_PREFERENCE
+                ) {
                   onChange({ ...query, arCategory: value, arSpecific: AR_ANY });
                 } else {
                   onChange({ ...query, arCategory: AR_ANY, arSpecific: value });
                 }
               }}
             >
+              <option value={AR_NO_PREFERENCE}>No preference</option>
               <option value={AR_ANY}>Any VSP AR</option>
               <option value={AR_NONE}>No AR</option>
               {vspCoatings.map((coating) => (
@@ -216,6 +223,7 @@ export function LensSearchForm({ catalog, query, onChange }: Props) {
                   })
                 }
               >
+                <option value={AR_NO_PREFERENCE}>No Preference</option>
                 <option value={AR_NONE}>No AR</option>
                 <option value={AR_ANY}>Any Tier</option>
                 <option value={AR_ANY_BLUE}>Any Blue AR</option>
