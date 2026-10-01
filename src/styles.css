@@ -99,8 +99,8 @@
   --flag-soft: oklch(0.954 0.056 91.1);
   --sheet-plexus: oklch(0.512 0.14 158.5);
   --sheet-plexus-soft: oklch(0.951 0.062 158.5);
-  --sheet-oogp: oklch(0.546 0.215 262.9);
-  --sheet-oogp-soft: oklch(0.947 0.036 271.5);
+  --sheet-oogp: oklch(0.525 0.212 302.5);
+  --sheet-oogp-soft: oklch(0.95 0.034 305);
   --border: oklch(1 0 0 / 70%);
   --glass-line: oklch(1 0 0 / 70%);
   --input: oklch(1 0 0 / 80%);
