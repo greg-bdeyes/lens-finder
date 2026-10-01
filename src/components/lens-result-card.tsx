@@ -38,19 +38,31 @@ export function LensResultCard({ match }: { match: LensMatch }) {
       }`}
     >
       <div className="flex items-start gap-4">
-        <div
-          className={`grid size-12 shrink-0 place-items-center rounded-lg font-display text-sm font-bold ${
-            exact ? "gradient-brand text-brand-foreground" : "bg-secondary text-ink-soft"
-          }`}
-        >
-          {shortMaterial(lens.material)}
+        <div className="flex shrink-0 flex-col items-center gap-1.5">
+          <div
+            className={`grid size-12 place-items-center rounded-lg font-display text-sm font-bold ${
+              exact ? "gradient-brand text-brand-foreground" : "bg-secondary text-ink-soft"
+            }`}
+          >
+            {shortMaterial(lens.material)}
+          </div>
+          <span
+            className={`rounded-md px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wider ${
+              lens.sheet === "Plexus"
+                ? "bg-sheet-plexus-soft text-sheet-plexus"
+                : "bg-sheet-oogp-soft text-sheet-oogp"
+            }`}
+          >
+            {lens.sheet}
+          </span>
         </div>
         <div className="min-w-0 flex-1">
           <p className="text-[14px] font-semibold">{lens.name}</p>
           <p className="text-[12px] text-ink-soft">{details}</p>
           <p className="mt-1 text-[11px] text-ink-faint">
-            {lens.manufacturer} · {lens.sheet} · SPH {range(lens.powerLow, lens.powerHigh)} · Cyl
-            to {lens.cylMax ?? "—"} · Total ≥ {lens.totalPowerLowerBound ?? "—"}
+            <span className="font-bold text-ink">{lens.manufacturer}</span> · SPH{" "}
+            {range(lens.powerLow, lens.powerHigh)} · Cyl to {lens.cylMax ?? "—"} · Total ≥{" "}
+            {lens.totalPowerLowerBound ?? "—"}
           </p>
           {lens.components && (
             <p className="mt-1 text-[11px] text-ink-faint">Components: {lens.components}</p>
