@@ -115,7 +115,7 @@ export function LensSearchForm({ catalog, query, onChange }: Props) {
                 ...query,
                 vsp: !query.vsp,
                 asphericity: "any",
-                arCategory: AR_ANY,
+                arCategory: AR_NO_PREFERENCE,
                 arSpecific: AR_ANY,
               })
             }
