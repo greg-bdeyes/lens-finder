@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import type { Catalog } from "@/lib/catalog-types";
 import {
   AR_ANY,
@@ -18,6 +18,42 @@ interface Props {
 function Label({ children }: { children: React.ReactNode }) {
   return (
     <label className="mb-1.5 block text-[12px] font-medium text-ink-soft">{children}</label>
+  );
+}
+
+function NumberField({
+  value,
+  onChange,
+  placeholder,
+}: {
+  value: number | null;
+  onChange: (value: number | null) => void;
+  placeholder: string;
+}) {
+  const [text, setText] = useState(value === null ? "" : String(value));
+  useEffect(() => {
+    const parsed = text.trim() === "" ? null : Number(text);
+    if (parsed !== value && !(Number.isNaN(parsed) && value === null)) {
+      setText(value === null ? "" : String(value));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [value]);
+  return (
+    <input
+      className="field tabular-nums"
+      type="text"
+      inputMode="text"
+      placeholder={placeholder}
+      value={text}
+      onChange={(event) => {
+        const next = event.target.value.replace(/[^0-9.+-]/g, "");
+        setText(next);
+        const parsed = Number(next);
+        if (next.trim() === "") onChange(null);
+        else if (!Number.isNaN(parsed)) onChange(parsed);
+        else onChange(null);
+      }}
+    />
   );
 }
 
@@ -213,26 +249,18 @@ export function LensSearchForm({ catalog, query, onChange }: Props) {
         <div className="grid grid-cols-2 gap-3">
           <div>
             <Label>Sphere (optional)</Label>
-            <input
-              className="field tabular-nums"
-              inputMode="decimal"
+            <NumberField
               placeholder="-2.25"
-              value={query.sphere ?? ""}
-              onChange={(event) =>
-                set("sphere", event.target.value === "" ? null : Number(event.target.value))
-              }
+              value={query.sphere}
+              onChange={(value) => set("sphere", value)}
             />
           </div>
           <div>
-            <Label>Cyl max (optional)</Label>
-            <input
-              className="field tabular-nums"
-              inputMode="decimal"
+            <Label>Cyl (optional)</Label>
+            <NumberField
               placeholder="-1.00"
-              value={query.cylinder ?? ""}
-              onChange={(event) =>
-                set("cylinder", event.target.value === "" ? null : Number(event.target.value))
-              }
+              value={query.cylinder}
+              onChange={(value) => set("cylinder", value)}
             />
           </div>
         </div>

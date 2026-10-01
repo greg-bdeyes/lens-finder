@@ -99,23 +99,20 @@ export function searchLenses(catalog: Catalog, query: LensQuery): LensMatch[] {
     // AR coating.
     if (query.arCategory === AR_NONE) {
       if (lens.ar) continue;
-    } else if (query.arCategory === AR_ANY) {
-      if (!coating) continue;
-      if (query.vsp && !coating.vsp) continue;
-    } else if (query.arCategory === AR_ANY_BLUE) {
-      if (!coating || !coating.blueFilter) continue;
-      if (query.vsp && !coating.vsp) continue;
     } else {
       if (!coating) continue;
       if (query.vsp && !coating.vsp) continue;
+      if (query.arCategory === AR_ANY_BLUE && !coating.blueFilter) continue;
       if (targetCoating) {
         if (coating.shorthand !== targetCoating.shorthand) {
           if (tierRank(coating.tier) <= targetTierRank) continue;
           upgrades.push(`${coating.name} (higher AR tier)`);
         }
-      } else if (coating.tier !== query.arCategory) {
-        if (tierRank(coating.tier) <= targetTierRank) continue;
-        upgrades.push(`${coating.name} (higher AR tier)`);
+      } else if (query.arCategory !== AR_ANY && query.arCategory !== AR_ANY_BLUE) {
+        if (coating.tier !== query.arCategory) {
+          if (tierRank(coating.tier) <= targetTierRank) continue;
+          upgrades.push(`${coating.name} (higher AR tier)`);
+        }
       }
     }
 
