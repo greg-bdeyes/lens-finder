@@ -54,6 +54,7 @@ function range(low: number | null, high: number | null) {
 
 export function LensResultCard({ match }: { match: LensMatch }) {
   const { lens, coating, upgrades, kind } = match;
+  const mat = matKey(lens.material);
   const exact = kind === "exact";
 
   const details = [
