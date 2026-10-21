@@ -10,6 +10,50 @@ function shortMaterial(material: string) {
   return material.slice(0, 5);
 }
 
+const MAT_CLASS: Record<string, string> = {
+  plastic: "mat-plastic",
+  poly: "mat-poly",
+  trivex: "mat-trivex",
+  "160": "mat-160",
+  "167": "mat-167",
+  "174": "mat-174",
+};
+
+const MAT_CLASS_SOFT: Record<string, string> = {
+  plastic: "mat-plastic-soft",
+  poly: "mat-poly-soft",
+  trivex: "mat-trivex-soft",
+  "160": "mat-160-soft",
+  "167": "mat-167-soft",
+  "174": "mat-174-soft",
+};
+
+const LIGHT_MATERIALS = new Set(["plastic", "trivex"]);
+
+function matKey(material: string): string {
+  const m = material.toLowerCase();
+  if (m.includes("polycarb")) return "poly";
+  if (m.includes("plastic")) return "plastic";
+  if (m.includes("trivex")) return "trivex";
+  if (m.includes("1.74")) return "174";
+  if (m.includes("1.67")) return "167";
+  if (m.includes("1.60")) return "160";
+  return "";
+}
+
+function matLabel(material: string) {
+  switch (matKey(material)) {
+    case "plastic":
+      return "CR-39";
+    case "poly":
+      return "Poly";
+    case "trivex":
+      return "Tvx";
+    default:
+      return shortMaterial(material);
+  }
+}
+
 function range(low: number | null, high: number | null) {
   if (low === null && high === null) return "—";
   const a = Math.min(low ?? 0, high ?? 0);
@@ -19,6 +63,7 @@ function range(low: number | null, high: number | null) {
 
 export function LensResultCard({ match }: { match: LensMatch }) {
   const { lens, coating, upgrades, kind } = match;
+  const mat = matKey(lens.material);
   const exact = kind === "exact";
 
   const details = [
@@ -41,10 +86,18 @@ export function LensResultCard({ match }: { match: LensMatch }) {
         <div className="flex shrink-0 flex-col items-center gap-1.5">
           <div
             className={`grid size-12 place-items-center rounded-lg font-display text-sm font-bold ${
-              exact ? "gradient-brand text-brand-foreground" : "bg-secondary text-ink-soft"
+              exact
+                ? mat
+                  ? `${MAT_CLASS[mat]} ${
+                      LIGHT_MATERIALS.has(mat) ? "text-ink" : "text-brand-foreground"
+                    }`
+                  : "gradient-brand text-brand-foreground"
+                : mat
+                  ? `${MAT_CLASS_SOFT[mat]} text-ink-soft`
+                  : "bg-secondary text-ink-soft"
             }`}
           >
-            {shortMaterial(lens.material)}
+            {matLabel(lens.material)}
           </div>
           <span
             className={`rounded-md px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wider ${
