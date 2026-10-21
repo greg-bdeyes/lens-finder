@@ -10,6 +10,41 @@ function shortMaterial(material: string) {
   return material.slice(0, 5);
 }
 
+const MAT_CLASS: Record<string, string> = {
+  plastic: "mat-plastic",
+  poly: "mat-poly",
+  trivex: "mat-trivex",
+  "160": "mat-160",
+  "167": "mat-167",
+  "174": "mat-174",
+};
+
+const LIGHT_MATERIALS = new Set(["plastic", "trivex"]);
+
+function matKey(material: string): string {
+  const m = material.toLowerCase();
+  if (m.includes("polycarb")) return "poly";
+  if (m.includes("plastic")) return "plastic";
+  if (m.includes("trivex")) return "trivex";
+  if (m.includes("1.74")) return "174";
+  if (m.includes("1.67")) return "167";
+  if (m.includes("1.60")) return "160";
+  return "";
+}
+
+function matLabel(material: string) {
+  switch (matKey(material)) {
+    case "plastic":
+      return "CR-39";
+    case "poly":
+      return "Poly";
+    case "trivex":
+      return "Tvx";
+    default:
+      return shortMaterial(material);
+  }
+}
+
 function range(low: number | null, high: number | null) {
   if (low === null && high === null) return "—";
   const a = Math.min(low ?? 0, high ?? 0);
