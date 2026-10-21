@@ -76,10 +76,18 @@ export function LensResultCard({ match }: { match: LensMatch }) {
         <div className="flex shrink-0 flex-col items-center gap-1.5">
           <div
             className={`grid size-12 place-items-center rounded-lg font-display text-sm font-bold ${
-              exact ? "gradient-brand text-brand-foreground" : "bg-secondary text-ink-soft"
+              exact
+                ? mat
+                  ? `${MAT_CLASS[mat]} ${
+                      LIGHT_MATERIALS.has(mat) ? "text-ink" : "text-brand-foreground"
+                    }`
+                  : "gradient-brand text-brand-foreground"
+                : mat
+                  ? `${MAT_CLASS[mat]}-soft text-ink-soft`
+                  : "bg-secondary text-ink-soft"
             }`}
           >
-            {shortMaterial(lens.material)}
+            {matLabel(lens.material)}
           </div>
           <span
             className={`rounded-md px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wider ${
