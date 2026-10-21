@@ -19,6 +19,15 @@ const MAT_CLASS: Record<string, string> = {
   "174": "mat-174",
 };
 
+const MAT_CLASS_SOFT: Record<string, string> = {
+  plastic: "mat-plastic-soft",
+  poly: "mat-poly-soft",
+  trivex: "mat-trivex-soft",
+  "160": "mat-160-soft",
+  "167": "mat-167-soft",
+  "174": "mat-174-soft",
+};
+
 const LIGHT_MATERIALS = new Set(["plastic", "trivex"]);
 
 function matKey(material: string): string {
@@ -84,7 +93,7 @@ export function LensResultCard({ match }: { match: LensMatch }) {
                     }`
                   : "gradient-brand text-brand-foreground"
                 : mat
-                  ? `${MAT_CLASS[mat]}-soft text-ink-soft`
+                  ? `${MAT_CLASS_SOFT[mat]} text-ink-soft`
                   : "bg-secondary text-ink-soft"
             }`}
           >
