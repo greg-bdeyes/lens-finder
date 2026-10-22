@@ -6,7 +6,7 @@ import { AR_ANY, AR_NO_PREFERENCE, searchLenses, type LensQuery } from "@/lib/se
 import { LensSearchForm } from "@/components/lens-search-form";
 import { LensResultCard } from "@/components/lens-result-card";
 
-const STORAGE_KEY = "stock-lens-catalog-v1";
+const STORAGE_KEY = "stock-lens-catalog-v2";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -63,7 +63,7 @@ function Index() {
     setError(null);
     try {
       const buffer = await file.arrayBuffer();
-      const parsed = parseWorkbook(buffer, file.name);
+      const parsed = await parseWorkbook(buffer, file.name);
       if (parsed.lenses.length === 0) {
         setError("No lens rows found — check that the file has Plexus and OOGP sheets.");
         return;

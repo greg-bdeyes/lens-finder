@@ -1,4 +1,5 @@
 import * as XLSX from "xlsx";
+import { extractCellImages, removeBackground } from "./workbook-images";
 import type { ArCoating, Catalog, Lens, SheetName } from "./catalog-types";
 
 type Row = (string | number | boolean | null)[];
@@ -77,7 +78,12 @@ function canonicalMaterial(raw: string, materials: string[]): string {
   return value;
 }
 
-function readLensSheet(wb: XLSX.WorkBook, sheet: SheetName, materials: string[]): Lens[] {
+function readLensSheet(
+  wb: XLSX.WorkBook,
+  sheet: SheetName,
+  materials: string[],
+  images: Record<string, Record<string, string>>,
+): Lens[] {
   const rows = rowsOf(wb, sheet);
   const headerIndex = rows.findIndex((row) =>
     row?.some((cell) => text(cell).toLowerCase() === "manufacturer"),
@@ -150,12 +156,24 @@ function readLensSheet(wb: XLSX.WorkBook, sheet: SheetName, materials: string[])
   return lenses;
 }
 
-export function parseWorkbook(data: ArrayBuffer, fileName: string): Catalog {
+export async function parseWorkbook(data: ArrayBuffer, fileName: string): Promise<Catalog> {
   const wb = XLSX.read(data, { type: "array" });
   const materials = readMaterials(wb);
+  const raw = extractCellImages(data);
+  const images: Record<string, Record<string, string>> = {};
+  for (const [sheet, cells] of Object.entries(raw)) {
+    images[sheet] = {};
+    for (const [ref, src] of Object.entries(cells)) {
+      try {
+        images[sheet][ref] = await removeBackground(src);
+      } catch {
+        images[sheet][ref] = src;
+      }
+    }
+  }
   const lenses = [
-    ...readLensSheet(wb, "Plexus", materials),
-    ...readLensSheet(wb, "OOGP", materials),
+    ...readLensSheet(wb, "Plexus", materials, images),
+    ...readLensSheet(wb, "OOGP", materials, images),
   ];
   return {
     fileName,
