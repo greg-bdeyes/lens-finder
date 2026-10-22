@@ -162,14 +162,15 @@ export async function parseWorkbook(data: ArrayBuffer, fileName: string): Promis
   const raw = extractCellImages(data);
   const images: Record<string, Record<string, string>> = {};
   for (const [sheet, cells] of Object.entries(raw)) {
-    images[sheet] = {};
+    const done: Record<string, string> = {};
     for (const [ref, src] of Object.entries(cells)) {
       try {
-        images[sheet][ref] = await removeBackground(src);
+        done[ref] = await removeBackground(src);
       } catch {
-        images[sheet][ref] = src;
+        done[ref] = src;
       }
     }
+    images[sheet] = done;
   }
   const lenses = [
     ...readLensSheet(wb, "Plexus", materials, images),
