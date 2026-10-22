@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { Catalog } from "@/lib/catalog-types";
 import { parseWorkbook } from "@/lib/parse-workbook";
-import { AR_ANY, AR_NO_PREFERENCE, searchLenses, type LensQuery } from "@/lib/search-lenses";
+import { defaultQuery, searchLenses, type LensQuery } from "@/lib/search-lenses";
 import { LensSearchForm } from "@/components/lens-search-form";
 import { LensResultCard } from "@/components/lens-result-card";
 
@@ -26,19 +26,6 @@ export const Route = createFileRoute("/")({
     ],
   }),
   component: Index,
-});
-
-const defaultQuery = (catalog: Catalog): LensQuery => ({
-  vsp: false,
-  material: catalog.materials[0] ?? "",
-  asphericity: "any",
-  arCategory: AR_NO_PREFERENCE,
-  arSpecific: AR_ANY,
-  sphere: null,
-  cylinder: null,
-  blueFilterLens: false,
-  photochromic: false,
-  tint: false,
 });
 
 function Index() {

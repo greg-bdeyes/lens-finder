@@ -155,3 +155,20 @@ export function coatingsInCategory(coatings: ArCoating[], category: string): ArC
   });
   return list.sort((a, b) => tierRank(a.tier) - tierRank(b.tier) || a.name.localeCompare(b.name));
 }
+
+/** The starting state for a catalog: no VSP, first material, no AR preference, no Rx. */
+export function defaultQuery(catalog: Catalog): LensQuery {
+  return {
+    vsp: false,
+    material: catalog.materials[0] ?? "",
+    asphericity: "any",
+    arCategory: AR_NO_PREFERENCE,
+    arSpecific: AR_ANY,
+    sphere: null,
+    cylinder: null,
+    blueFilterLens: false,
+    photochromic: false,
+    tint: false,
+  };
+}
+
