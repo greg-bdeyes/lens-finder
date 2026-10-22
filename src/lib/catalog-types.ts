@@ -20,6 +20,8 @@ export interface Lens {
   lensCost: number | null;
   pairCost: number | null;
   notes: string | null;
+  labStock: boolean;
+  image: string | null;
 }
 
 export interface ArCoating {

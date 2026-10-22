@@ -1,4 +1,5 @@
 import * as XLSX from "xlsx";
+import { extractCellImages, removeBackground } from "./workbook-images";
 import type { ArCoating, Catalog, Lens, SheetName } from "./catalog-types";
 
 type Row = (string | number | boolean | null)[];
@@ -77,7 +78,12 @@ function canonicalMaterial(raw: string, materials: string[]): string {
   return value;
 }
 
-function readLensSheet(wb: XLSX.WorkBook, sheet: SheetName, materials: string[]): Lens[] {
+function readLensSheet(
+  wb: XLSX.WorkBook,
+  sheet: SheetName,
+  materials: string[],
+  images: Record<string, Record<string, string>>,
+): Lens[] {
   const rows = rowsOf(wb, sheet);
   const headerIndex = rows.findIndex((row) =>
     row?.some((cell) => text(cell).toLowerCase() === "manufacturer"),
@@ -106,6 +112,9 @@ function readLensSheet(wb: XLSX.WorkBook, sheet: SheetName, materials: string[])
   const iCost = colStarts("lens cost");
   const iPair = col("pair");
   const iNotes = colStarts("notes");
+  const iLab = colStarts("lab stock");
+  const iImage = col("image");
+  const sheetImages = images[sheet] ?? {};
 
   const lenses: Lens[] = [];
   let currentMaterial = "";
@@ -116,6 +125,8 @@ function readLensSheet(wb: XLSX.WorkBook, sheet: SheetName, materials: string[])
     if (groupCell) currentMaterial = groupCell;
     const name = text(row[iName]);
     if (!name) return;
+    const rowNumber = headerIndex + 1 + offset + 1;
+    const imageRef = iImage >= 0 ? `${XLSX.utils.encode_col(iImage)}${rowNumber}` : "";
 
     lenses.push({
       id: `${sheet}-${headerIndex + 1 + offset}`,
@@ -137,18 +148,33 @@ function readLensSheet(wb: XLSX.WorkBook, sheet: SheetName, materials: string[])
       lensCost: num(row[iCost]),
       pairCost: num(row[iPair]),
       notes: iNotes >= 0 ? text(row[iNotes]) || null : null,
+      labStock: iLab >= 0 ? bool(row[iLab]) : false,
+      image: sheetImages[imageRef] ?? null,
     });
   });
 
   return lenses;
 }
 
-export function parseWorkbook(data: ArrayBuffer, fileName: string): Catalog {
+export async function parseWorkbook(data: ArrayBuffer, fileName: string): Promise<Catalog> {
   const wb = XLSX.read(data, { type: "array" });
   const materials = readMaterials(wb);
+  const raw = extractCellImages(data);
+  const images: Record<string, Record<string, string>> = {};
+  for (const [sheet, cells] of Object.entries(raw)) {
+    const done: Record<string, string> = {};
+    for (const [ref, src] of Object.entries(cells)) {
+      try {
+        done[ref] = await removeBackground(src);
+      } catch {
+        done[ref] = src;
+      }
+    }
+    images[sheet] = done;
+  }
   const lenses = [
-    ...readLensSheet(wb, "Plexus", materials),
-    ...readLensSheet(wb, "OOGP", materials),
+    ...readLensSheet(wb, "Plexus", materials, images),
+    ...readLensSheet(wb, "OOGP", materials, images),
   ];
   return {
     fileName,

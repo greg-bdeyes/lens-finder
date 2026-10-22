@@ -78,9 +78,11 @@ export function LensResultCard({ match }: { match: LensMatch }) {
 
   return (
     <div
-      className={`glass rounded-xl border border-glass-line p-4 ${
-        exact ? "shadow-glass" : ""
-      }`}
+      className={`rounded-xl p-4 ${
+        lens.labStock
+          ? "border-2 border-lab-stock bg-lab-stock-soft"
+          : "glass border border-glass-line"
+      } ${exact ? "shadow-glass" : ""}`}
     >
       <div className="flex items-start gap-4">
         <div className="flex shrink-0 flex-col items-center gap-1.5">
@@ -110,7 +112,14 @@ export function LensResultCard({ match }: { match: LensMatch }) {
           </span>
         </div>
         <div className="min-w-0 flex-1">
-          <p className="text-[14px] font-semibold">{lens.name}</p>
+          <p className="text-[14px] font-semibold">
+            {lens.name}
+            {lens.labStock && (
+              <span className="ml-2 rounded bg-lab-stock px-1.5 py-0.5 align-middle text-[9px] font-bold uppercase tracking-wider text-ink">
+                Lab stock
+              </span>
+            )}
+          </p>
           <p className="text-[12px] text-ink-soft">{details}</p>
           <p className="mt-1 text-[11px] text-ink-faint">
             <span className="font-bold text-ink">{lens.manufacturer}</span> · SPH{" "}
@@ -134,6 +143,13 @@ export function LensResultCard({ match }: { match: LensMatch }) {
             </div>
           )}
         </div>
+        {lens.image && (
+          <img
+            src={lens.image}
+            alt={lens.name}
+            className="hidden size-20 shrink-0 object-contain sm:block"
+          />
+        )}
         <div className="shrink-0 text-right">
           <p className="font-display text-[16px] font-bold tabular-nums">
             {money(lens.pairCost)}
