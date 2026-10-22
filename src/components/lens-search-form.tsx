@@ -6,6 +6,7 @@ import {
   AR_NONE,
   AR_NO_PREFERENCE,
   coatingsInCategory,
+  defaultQuery,
   tiersFor,
   type LensQuery,
 } from "@/lib/search-lenses";
@@ -96,8 +97,19 @@ export function LensSearchForm({ catalog, query, onChange }: Props) {
 
   return (
     <div className="glass shadow-glass rounded-2xl border border-glass-line p-5">
-      <h2 className="font-display text-lg font-semibold">Lens search</h2>
-      <p className="mb-5 text-[12px] text-ink-soft">Set parameters to match exact stock.</p>
+      <div className="mb-4 flex items-start justify-between gap-3">
+        <div>
+          <h2 className="font-display text-lg font-semibold">Lens search</h2>
+          <p className="text-[12px] text-ink-soft">Set parameters to match exact stock.</p>
+        </div>
+        <button
+          type="button"
+          onClick={() => onChange(defaultQuery(catalog))}
+          className="shrink-0 rounded-full border border-glass-line bg-secondary px-3 py-1.5 text-[11px] font-medium text-ink-soft transition-colors hover:border-brand/40 hover:text-ink"
+        >
+          Reset
+        </button>
+      </div>
 
       <div className="space-y-4">
         <div className="flex items-center justify-between">

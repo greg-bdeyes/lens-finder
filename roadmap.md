@@ -8,3 +8,6 @@
 - [x] Exact matches + close matches (upgrades only)
 - [x] Components column excluded from search, shown in results
 - [x] Frosted Clinical design direction
+- [x] Per-material result bubbles (CR-39 / Poly / Tvx abbreviations, own gradient each)
+- [x] Lab Stock lenses highlighted (golden outline + soft gold background) with lens image
+- [x] Reset button returns every option to its default
