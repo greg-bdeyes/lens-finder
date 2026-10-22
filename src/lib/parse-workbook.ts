@@ -106,6 +106,9 @@ function readLensSheet(wb: XLSX.WorkBook, sheet: SheetName, materials: string[])
   const iCost = colStarts("lens cost");
   const iPair = col("pair");
   const iNotes = colStarts("notes");
+  const iLab = colStarts("lab stock");
+  const iImage = col("image");
+  const sheetImages = images[sheet] ?? {};
 
   const lenses: Lens[] = [];
   let currentMaterial = "";
@@ -116,6 +119,8 @@ function readLensSheet(wb: XLSX.WorkBook, sheet: SheetName, materials: string[])
     if (groupCell) currentMaterial = groupCell;
     const name = text(row[iName]);
     if (!name) return;
+    const rowNumber = headerIndex + 1 + offset + 1;
+    const imageRef = iImage >= 0 ? `${XLSX.utils.encode_col(iImage)}${rowNumber}` : "";
 
     lenses.push({
       id: `${sheet}-${headerIndex + 1 + offset}`,
@@ -137,6 +142,8 @@ function readLensSheet(wb: XLSX.WorkBook, sheet: SheetName, materials: string[])
       lensCost: num(row[iCost]),
       pairCost: num(row[iPair]),
       notes: iNotes >= 0 ? text(row[iNotes]) || null : null,
+      labStock: iLab >= 0 ? bool(row[iLab]) : false,
+      image: sheetImages[imageRef] ?? null,
     });
   });
 
