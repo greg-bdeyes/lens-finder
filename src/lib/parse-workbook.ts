@@ -196,5 +196,6 @@ export async function parseWorkbook(data: ArrayBuffer, fileName: string): Promis
     materials,
     lenses,
     coatings: readCoatings(wb),
+    words: readWords(wb, images),
   };
 }
