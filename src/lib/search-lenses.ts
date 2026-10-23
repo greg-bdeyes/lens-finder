@@ -123,6 +123,7 @@ export function searchLenses(catalog: Catalog, query: LensQuery): LensMatch[] {
   }
 
   return matches.sort((a, b) => {
+    if (a.lens.labStock !== b.lens.labStock) return a.lens.labStock ? -1 : 1;
     if (a.kind !== b.kind) return a.kind === "exact" ? -1 : 1;
     if (a.upgrades.length !== b.upgrades.length) return a.upgrades.length - b.upgrades.length;
     return (a.lens.pairCost ?? Infinity) - (b.lens.pairCost ?? Infinity);
@@ -160,7 +161,7 @@ export function coatingsInCategory(coatings: ArCoating[], category: string): ArC
 export function defaultQuery(catalog: Catalog): LensQuery {
   return {
     vsp: false,
-    material: catalog.materials[0] ?? "",
+    material: "", // "" = No Preference
     asphericity: "any",
     arCategory: AR_NO_PREFERENCE,
     arSpecific: AR_ANY,
