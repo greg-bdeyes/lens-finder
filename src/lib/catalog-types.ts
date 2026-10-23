@@ -32,12 +32,18 @@ export interface ArCoating {
   vsp: boolean;
 }
 
+export interface CatalogWords {
+  title: string | null;
+  titleImage: string | null;
+}
+
 export interface Catalog {
   fileName: string;
   loadedAt: string;
   materials: string[];
   lenses: Lens[];
   coatings: ArCoating[];
+  words: CatalogWords;
 }
 
 export const TIER_RANK: Record<string, number> = {
