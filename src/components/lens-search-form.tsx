@@ -151,6 +151,7 @@ export function LensSearchForm({ catalog, query, onChange }: Props) {
               value={query.material}
               onChange={(event) => set("material", event.target.value)}
             >
+              <option value="">No Preference</option>
               {materials.map((material) => (
                 <option key={material} value={material}>
                   {material}
