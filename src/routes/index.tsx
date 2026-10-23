@@ -77,14 +77,22 @@ function Index() {
   return (
     <div className="min-h-screen w-full font-sans text-ink">
       <header className="glass-strong sticky top-0 z-20 border-b border-glass-line">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
+        <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-[21px]">
           <div className="flex items-center gap-3">
-            <div className="gradient-brand grid size-9 place-items-center rounded-xl font-display text-sm font-bold text-brand-foreground shadow-lg">
-              Lx
-            </div>
+            {catalog?.words.titleImage ? (
+              <img
+                src={catalog.words.titleImage}
+                alt=""
+                className="h-[52px] w-auto object-contain"
+              />
+            ) : (
+              <div className="gradient-brand grid size-9 place-items-center rounded-xl font-display text-sm font-bold text-brand-foreground shadow-lg">
+                Lx
+              </div>
+            )}
             <div>
               <p className="font-display text-[15px] font-semibold leading-none">
-                Stock Lens Finder
+                {catalog?.words.title || "Stock Lens Finder"}
               </p>
               <p className="mt-1 text-[11px] text-ink-soft">
                 {catalog
