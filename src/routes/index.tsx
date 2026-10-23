@@ -77,31 +77,33 @@ function Index() {
   return (
     <div className="min-h-screen w-full font-sans text-ink">
       <header className="glass-strong sticky top-0 z-20 border-b border-glass-line">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-[21px]">
-          <div className="flex items-center gap-3">
+        <div className="mx-auto grid max-w-7xl grid-cols-[1fr_auto_1fr] items-center px-6 py-[21px]">
+          <div aria-hidden="true" />
+          <div className="flex items-center justify-center gap-4">
             {catalog?.words?.titleImage ? (
               <img
                 src={catalog.words.titleImage}
                 alt=""
-                className="h-[52px] w-auto object-contain"
+                className="h-[60px] w-auto object-contain"
               />
             ) : (
-              <div className="gradient-brand grid size-9 place-items-center rounded-xl font-display text-sm font-bold text-brand-foreground shadow-lg">
+              <div className="gradient-brand grid size-11 place-items-center rounded-xl font-display text-base font-bold text-brand-foreground shadow-lg">
                 Lx
               </div>
             )}
             <div>
-              <p className="font-display text-[15px] font-semibold leading-none">
+              <p className="font-display text-[19px] font-semibold leading-none">
                 {catalog?.words?.title || "Stock Lens Finder"}
               </p>
-              <p className="mt-1 text-[11px] text-ink-soft">
+              <p className="mt-1.5 text-[11px] text-ink-soft">
                 {catalog
                   ? `${catalog.lenses.length} lenses · ${catalog.fileName}`
                   : "Load the lens workbook to begin"}
               </p>
             </div>
           </div>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center justify-end gap-3">
+
             <input
               ref={fileInput}
               type="file"
