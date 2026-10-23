@@ -1,6 +1,6 @@
 import * as XLSX from "xlsx";
 import { extractCellImages, removeBackground } from "./workbook-images";
-import type { ArCoating, Catalog, Lens, SheetName } from "./catalog-types";
+import type { ArCoating, Catalog, CatalogWords, Lens, SheetName } from "./catalog-types";
 
 type Row = (string | number | boolean | null)[];
 
@@ -154,6 +154,20 @@ function readLensSheet(
   });
 
   return lenses;
+}
+
+function readWords(wb: XLSX.WorkBook, images: Record<string, Record<string, string>>): CatalogWords {
+  const rows = rowsOf(wb, "Words");
+  const sheetImages = images["Words"] ?? {};
+  const out: CatalogWords = { title: null, titleImage: null };
+  rows.forEach((row, index) => {
+    if (!row) return;
+    if (text(row[0]).toLowerCase() !== "title") return;
+    out.title = text(row[1]) || null;
+    const rowNumber = index + 1;
+    out.titleImage = sheetImages[`C${rowNumber}`] ?? null;
+  });
+  return out;
 }
 
 export async function parseWorkbook(data: ArrayBuffer, fileName: string): Promise<Catalog> {
