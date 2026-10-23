@@ -77,14 +77,14 @@ function Index() {
   return (
     <div className="min-h-screen w-full font-sans text-ink">
       <header className="glass-strong sticky top-0 z-20 border-b border-glass-line">
-        <div className="mx-auto grid max-w-7xl grid-cols-[1fr_auto_1fr] items-center px-6 py-[21px]">
+        <div className="mx-auto grid max-w-7xl grid-cols-[1fr_auto_1fr] items-center px-6 py-[14px]">
           <div aria-hidden="true" />
           <div className="flex items-center justify-center gap-4">
             {catalog?.words?.titleImage ? (
               <img
                 src={catalog.words.titleImage}
                 alt=""
-                className="h-[60px] w-auto object-contain"
+                className="h-[66px] w-auto object-contain"
               />
             ) : (
               <div className="gradient-brand grid size-11 place-items-center rounded-xl font-display text-base font-bold text-brand-foreground shadow-lg">
