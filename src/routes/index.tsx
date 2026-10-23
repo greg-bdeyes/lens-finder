@@ -79,7 +79,7 @@ function Index() {
       <header className="glass-strong sticky top-0 z-20 border-b border-glass-line">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-[21px]">
           <div className="flex items-center gap-3">
-            {catalog?.words.titleImage ? (
+            {catalog?.words?.titleImage ? (
               <img
                 src={catalog.words.titleImage}
                 alt=""
@@ -92,7 +92,7 @@ function Index() {
             )}
             <div>
               <p className="font-display text-[15px] font-semibold leading-none">
-                {catalog?.words.title || "Stock Lens Finder"}
+                {catalog?.words?.title || "Stock Lens Finder"}
               </p>
               <p className="mt-1 text-[11px] text-ink-soft">
                 {catalog
