@@ -11,3 +11,4 @@
 - [x] Per-material result bubbles (CR-39 / Poly / Tvx abbreviations, own gradient each)
 - [x] Lab Stock lenses highlighted (golden outline + soft gold background) with lens image
 - [x] Reset button returns every option to its default
+- [x] Words sheet drives header: title text (col B) + image (col C), taller header
