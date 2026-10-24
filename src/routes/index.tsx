@@ -6,6 +6,54 @@ import { defaultQuery, searchLenses, type LensQuery } from "@/lib/search-lenses"
 import { LensSearchForm } from "@/components/lens-search-form";
 import { LensResultCard } from "@/components/lens-result-card";
 
+type Theme = "light" | "dark" | "spooky";
+const THEME_KEY = "stock-lens-theme";
+const THEMES: { value: Theme; label: string }[] = [
+  { value: "light", label: "Light" },
+  { value: "dark", label: "Dark" },
+  { value: "spooky", label: "Spooky" },
+];
+
+function applyTheme(theme: Theme) {
+  const root = document.documentElement;
+  root.classList.toggle("dark", theme !== "light");
+  root.classList.toggle("spooky", theme === "spooky");
+}
+
+function ThemePicker() {
+  const [theme, setTheme] = useState<Theme>("light");
+  useEffect(() => {
+    const saved = localStorage.getItem(THEME_KEY);
+    if (saved === "dark" || saved === "spooky" || saved === "light") setTheme(saved);
+  }, []);
+  useEffect(() => {
+    applyTheme(theme);
+  }, [theme]);
+  return (
+    <div role="radiogroup" aria-label="Theme" className="flex rounded-full border border-glass-line bg-secondary p-0.5">
+      {THEMES.map((t) => (
+        <button
+          key={t.value}
+          type="button"
+          role="radio"
+          aria-checked={theme === t.value}
+          onClick={() => {
+            setTheme(t.value);
+            localStorage.setItem(THEME_KEY, t.value);
+          }}
+          className={
+            theme === t.value
+              ? "rounded-full bg-primary px-2.5 py-1 text-[11px] font-semibold text-primary-foreground"
+              : "rounded-full px-2.5 py-1 text-[11px] font-medium text-ink-soft hover:text-ink"
+          }
+        >
+          {t.label}
+        </button>
+      ))}
+    </div>
+  );
+}
+
 const STORAGE_KEY = "stock-lens-catalog-v2";
 
 export const Route = createFileRoute("/")({
@@ -102,7 +150,7 @@ function Index() {
               </p>
             </div>
           </div>
-          <div className="flex items-center justify-end gap-3">
+          <div className="flex flex-col items-end justify-center gap-2">
 
             <input
               ref={fileInput}
@@ -121,6 +169,7 @@ function Index() {
             >
               {catalog ? "Reload workbook" : "Open lens workbook"}
             </button>
+            <ThemePicker />
           </div>
         </div>
       </header>
