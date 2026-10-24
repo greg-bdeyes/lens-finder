@@ -96,7 +96,7 @@ export function LensSearchForm({ catalog, query, onChange }: Props) {
     query.arCategory === AR_NONE || query.arCategory === AR_NO_PREFERENCE;
 
   return (
-    <div className="glass shadow-glass rounded-2xl border border-glass-line p-5">
+    <div className="glass-panel shadow-glass rounded-2xl border border-glass-line p-5">
       <div className="mb-4 flex items-start justify-between gap-3">
         <div>
           <h2 className="font-display text-lg font-semibold">Lens search</h2>
