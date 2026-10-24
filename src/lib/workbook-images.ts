@@ -116,7 +116,9 @@ export async function removeBackground(src: string, size = 240): Promise<string>
   let maxY = -1;
   for (let y = 0; y < h; y++) {
     for (let x = 0; x < w; x++) {
-      if (px[(y * w + x) * 4 + 3] > 0) {
+      const a = px[(y * w + x) * 4 + 3] ?? 0;
+      if (a > 0) {
+
         if (x < minX) minX = x;
         if (x > maxX) maxX = x;
         if (y < minY) minY = y;
