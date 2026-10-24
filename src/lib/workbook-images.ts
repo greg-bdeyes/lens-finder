@@ -109,5 +109,31 @@ export async function removeBackground(src: string, size = 240): Promise<string>
     if (i < w * (h - 1)) stack.push(i + w);
   }
   ctx.putImageData(d, 0, 0);
-  return canvas.toDataURL("image/png");
+  // Trim fully transparent margins so the artwork fills the box it is shown in.
+  let minX = w;
+  let minY = h;
+  let maxX = -1;
+  let maxY = -1;
+  for (let y = 0; y < h; y++) {
+    for (let x = 0; x < w; x++) {
+      if (px[(y * w + x) * 4 + 3] > 0) {
+        if (x < minX) minX = x;
+        if (x > maxX) maxX = x;
+        if (y < minY) minY = y;
+        if (y > maxY) maxY = y;
+      }
+    }
+  }
+  if (maxX < minX || maxY < minY) return canvas.toDataURL("image/png");
+  const cw = maxX - minX + 1;
+  const ch = maxY - minY + 1;
+  if (cw === w && ch === h) return canvas.toDataURL("image/png");
+  const out = document.createElement("canvas");
+  out.width = cw;
+  out.height = ch;
+  const octx = out.getContext("2d");
+  if (!octx) return canvas.toDataURL("image/png");
+  octx.drawImage(canvas, minX, minY, cw, ch, 0, 0, cw, ch);
+  return out.toDataURL("image/png");
 }
+
