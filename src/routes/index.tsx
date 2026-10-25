@@ -21,7 +21,7 @@ function applyTheme(theme: Theme) {
 }
 
 function ThemePicker() {
-  const [theme, setTheme] = useState<Theme>("light");
+  const [theme, setTheme] = useState<Theme>("spooky");
   useEffect(() => {
     const saved = localStorage.getItem(THEME_KEY);
     if (saved === "dark" || saved === "spooky" || saved === "light") setTheme(saved);

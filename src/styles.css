@@ -208,8 +208,8 @@
   --muted-foreground: oklch(0.82 0.025 305);
   /* Result cards wear the deep purple the panel used to have. */
   --glass-bg: oklch(0.27 0.088 302 / 84%);
-  /* The Lens search box is bright orchid — the #A349A4 family. */
-  --panel-bg: oklch(0.5549 0.1646 327 / 85%);
+  /* The Lens search box is deep orchid — #5e295e. */
+  --panel-bg: oklch(0.3763 0.107 327 / 85%);
   --glass-strong-bg: oklch(0.2 0.04 300 / 85%);
   --field-bg: oklch(0.16 0.03 300 / 80%);
   /* Lab stock rows glow orange instead of gold. */
