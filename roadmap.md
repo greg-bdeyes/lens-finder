@@ -12,3 +12,4 @@
 - [x] Lab Stock lenses highlighted (golden outline + soft gold background) with lens image
 - [x] Reset button returns every option to its default
 - [x] Words sheet drives header: title text (col B) + image (col C), taller header
+- [x] Light / Dark / Spooky theme switch (Spooky is the default; panel #5e295e, purple cards, orange lab stock)
