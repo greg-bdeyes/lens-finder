@@ -55,6 +55,9 @@ function ThemePicker() {
 }
 
 const STORAGE_KEY = "stock-lens-catalog-v2";
+// Address of the workbook, relative to where the app is hosted. Put the
+// workbook in the same folder as the app (or change this path/URL).
+const WORKBOOK_URL = "Stock_lens_database.xlsx";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -83,15 +86,40 @@ function Index() {
   const fileInput = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    try {
-      const saved = window.localStorage.getItem(STORAGE_KEY);
-      if (!saved) return;
-      const parsed = JSON.parse(saved) as Catalog;
-      setCatalog(parsed);
-      setQuery(defaultQuery(parsed));
-    } catch {
-      // ignore a corrupt cache
-    }
+    let cancelled = false;
+    const useCache = () => {
+      try {
+        const saved = window.localStorage.getItem(STORAGE_KEY);
+        if (!saved) return;
+        const parsed = JSON.parse(saved) as Catalog;
+        setCatalog(parsed);
+        setQuery(defaultQuery(parsed));
+      } catch {
+        // ignore a corrupt cache
+      }
+    };
+    (async () => {
+      try {
+        const res = await fetch(`${WORKBOOK_URL}?t=${Date.now()}`, { cache: "no-store" });
+        if (!res.ok) throw new Error("not found");
+        const buffer = await res.arrayBuffer();
+        const name = decodeURIComponent(WORKBOOK_URL.split("/").pop() || WORKBOOK_URL);
+        const parsed = await parseWorkbook(buffer, name);
+        if (cancelled || parsed.lenses.length === 0) throw new Error("empty");
+        setCatalog(parsed);
+        setQuery(defaultQuery(parsed));
+        try {
+          window.localStorage.setItem(STORAGE_KEY, JSON.stringify(parsed));
+        } catch {
+          // cache is optional
+        }
+      } catch {
+        if (!cancelled) useCache();
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   const loadFile = async (file: File) => {
