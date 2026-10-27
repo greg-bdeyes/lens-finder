@@ -57,7 +57,7 @@ function ThemePicker() {
 const STORAGE_KEY = "stock-lens-catalog-v2";
 // Address of the workbook, relative to where the app is hosted. Put the
 // workbook in the same folder as the app (or change this path/URL).
-const WORKBOOK_URL = "Stock_lens_database.xlsx";
+const WORKBOOK_URL = "file://192.168.1.81/Shares/Optician%20tools/Stock_lens_database.xlsx";
 
 export const Route = createFileRoute("/")({
   head: () => ({
