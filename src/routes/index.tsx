@@ -87,7 +87,7 @@ function Index() {
 
   useEffect(() => {
     let cancelled = false;
-    const useCache = () => {
+    const loadCached = () => {
       try {
         const saved = window.localStorage.getItem(STORAGE_KEY);
         if (!saved) return;
@@ -114,7 +114,7 @@ function Index() {
           // cache is optional
         }
       } catch {
-        if (!cancelled) useCache();
+        if (!cancelled) loadCached();
       }
     })();
     return () => {
